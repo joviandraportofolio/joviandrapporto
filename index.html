@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Jovi Andra — Broadcast Motion Designer</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+
+<style>
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+font-family:Inter;
+background:#030303;
+color:white;
+overflow-x:hidden;
+}
+
+/* GRID BACKGROUND */
+
+#grid-bg{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+z-index:-2;
+opacity:.15;
+pointer-events:none;
+}
+
+/* CURSOR */
+
+.cursor{
+width:14px;
+height:14px;
+background:white;
+border-radius:50%;
+position:fixed;
+pointer-events:none;
+transform:translate(-50%,-50%);
+mix-blend-mode:difference;
+z-index:2000;
+transition:.2s;
+}
+
+.cursor.hover{
+transform:translate(-50%,-50%) scale(2);
+}
+
+/* NAV */
+
+nav{
+position:fixed;
+top:20px;
+left:50%;
+transform:translateX(-50%);
+width:90%;
+max-width:1200px;
+padding:16px 30px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:rgba(255,255,255,.06);
+backdrop-filter:blur(20px);
+border-radius:40px;
+border:1px solid rgba(255,255,255,.1);
+z-index:1000;
+}
+
+nav a{
+margin-left:24px;
+text-decoration:none;
+color:white;
+opacity:.8;
+transition:.3s;
+}
+
+nav a:hover{opacity:1}
+
+/* HERO */
+
+.hero{
+height:100vh;
+position:relative;
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+overflow:hidden;
+}
+
+.hero video{
+position:absolute;
+width:100%;
+height:100%;
+object-fit:cover;
+filter:brightness(.4);
+}
+
+.hero-gradient{
+position:absolute;
+width:100%;
+height:100%;
+background:linear-gradient(transparent,#030303);
+}
+
+.hero-content{
+position:relative;
+z-index:2;
+}
+
+.hero h1{
+font-size:80px;
+letter-spacing:-2px;
+}
+
+.hero p{
+margin-top:12px;
+font-size:20px;
+opacity:.85;
+max-width:600px;
+}
+
+.scroll-indicator{
+margin-top:40px;
+opacity:.6;
+font-size:14px;
+animation:float 2s infinite;
+}
+
+@keyframes float{
+0%{transform:translateY(0)}
+50%{transform:translateY(8px)}
+100%{transform:translateY(0)}
+}
+
+/* SECTIONS */
+
+section{
+padding:140px 8%;
+position:relative;
+}
+
+section::after{
+content:"";
+display:block;
+height:1px;
+margin-top:120px;
+background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent);
+}
+
+/* BG TITLE */
+
+.section-bg{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+font-size:200px;
+font-weight:700;
+opacity:.03;
+pointer-events:none;
+white-space:nowrap;
+}
+
+/* TITLES */
+
+.section-header{
+text-align:center;
+margin-bottom:80px;
+}
+
+.section-title{
+display:inline-block;
+padding:14px 32px;
+border-radius:40px;
+background:rgba(255,255,255,.06);
+backdrop-filter:blur(10px);
+border:1px solid rgba(255,255,255,.12);
+font-size:40px;
+}
+
+/* SHOWREEL */
+
+.showreel video{
+width:100%;
+max-width:900px;
+border-radius:14px;
+box-shadow:0 20px 60px rgba(0,0,0,.7);
+}
+
+/* FEATURED ROW */
+
+.reel-row{
+display:flex;
+gap:30px;
+overflow-x:auto;
+padding-bottom:20px;
+scroll-snap-type:x mandatory;
+}
+
+.reel-row::-webkit-scrollbar{display:none}
+
+.reel-card{
+min-width:420px;
+cursor:pointer;
+transition:.4s;
+scroll-snap-align:start;
+}
+
+.reel-card:hover{
+transform:scale(1.08);
+}
+
+.reel-card video{
+width:100%;
+border-radius:12px;
+}
+
+/* VIDEO GLOW */
+
+.card:hover video,
+.reel-card:hover video{
+box-shadow:
+0 20px 80px rgba(0,0,0,.8),
+0 0 40px rgba(255,255,255,.08);
+}
+
+/* PROJECT GRID */
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(360px,1fr));
+gap:50px;
+}
+
+.card video{
+width:100%;
+border-radius:12px;
+transition:transform .6s ease,filter .6s ease;
+filter:brightness(.85);
+}
+
+.card:hover video{
+transform:scale(1.08);
+filter:brightness(1);
+}
+
+/* PROCESS */
+
+.process{
+display:flex;
+justify-content:center;
+gap:60px;
+flex-wrap:wrap;
+text-align:center;
+}
+
+.step{
+max-width:220px;
+}
+
+.step-number{
+font-size:32px;
+opacity:.5;
+margin-bottom:10px;
+}
+
+/* CLIENTS */
+
+.marquee{
+overflow:hidden;
+white-space:nowrap;
+}
+
+.marquee-track{
+display:flex;
+gap:80px;
+animation:marquee 25s linear infinite;
+}
+
+.marquee img{
+width:160px;
+height:80px;
+object-fit:contain;
+opacity:.8;
+filter:grayscale(100%);
+transition:.4s;
+}
+
+.marquee img:hover{
+filter:grayscale(0%);
+opacity:1;
+transform:scale(1.1);
+}
+
+@keyframes marquee{
+0%{transform:translateX(0)}
+100%{transform:translateX(-50%)}
+}
+
+/* CONTACT */
+
+.contact-buttons{
+display:flex;
+justify-content:center;
+gap:20px;
+flex-wrap:wrap;
+}
+
+.contact-btn{
+padding:14px 28px;
+border-radius:40px;
+text-decoration:none;
+font-weight:600;
+color:white;
+transition:.2s;
+}
+
+.email{background:white;color:black}
+.whatsapp{background:#25D366}
+.linkedin{background:#0A66C2}
+
+footer{
+text-align:center;
+padding:60px;
+opacity:.5;
+}
+
+</style>
+</head>
+
+<body>
+
+<canvas id="grid-bg"></canvas>
+
+<div class="cursor"></div>
+
+<nav>
+<strong>JOVI ANDRA</strong>
+<div>
+<a href="#showreel">Showreel</a>
+<a href="#work">Work</a>
+<a href="#case-study">Case Study</a>
+<a href="#clients">Clients</a>
+<a href="#contact">Contact</a>
+</div>
+</nav>
+
+<section class="hero">
+
+<video autoplay muted loop playsinline>
+<source src="video16.mp4">
+</video>
+
+<div class="hero-gradient"></div>
+
+<div class="hero-content">
+
+<h1>Jovi Andra</h1>
+
+<p>
+Motion Designer crafting cinematic broadcast graphics and digital storytelling.
+</p>
+
+<div class="scroll-indicator">Scroll ↓</div>
+
+</div>
+
+</section>
+
+<section id="showreel">
+
+<div class="section-bg">SHOWREEL</div>
+
+<div class="section-header">
+<h2 class="section-title">Showreel</h2>
+</div>
+
+<div class="showreel" style="text-align:center">
+
+<video controls>
+<source src="jovi-andra-showreel.mp4">
+</video>
+
+</div>
+
+</section>
+
+<section>
+
+<div class="section-bg">FEATURED</div>
+
+<div class="section-header">
+<h2 class="section-title">Featured Motion</h2>
+</div>
+
+<div class="reel-row">
+
+<div class="reel-card"><video muted loop><source src="video1.mp4"></video></div>
+<div class="reel-card"><video muted loop><source src="video3.mp4"></video></div>
+<div class="reel-card"><video muted loop><source src="video4.mp4"></video></div>
+<div class="reel-card"><video muted loop><source src="video5.mp4"></video></div>
+
+</div>
+
+</section>
+
+<section id="work">
+
+<div class="section-bg">PROJECTS</div>
+
+<div class="section-header">
+<h2 class="section-title">Selected Work</h2>
+</div>
+
+<div class="grid">
+
+<div class="card">
+<video autoplay muted loop>
+<source src="video4.mp4">
+</video>
+<h3>KompasTV Election Graphics</h3>
+<p>Broadcast motion graphics system for election coverage used on national television.</p>
+</div>
+
+<div class="card">
+<video autoplay muted loop>
+<source src="video3.mp4">
+</video>
+<h3>GlobalTV Birthday TVC</h3>
+<p>Video editing and broadcast packaging.</p>
+</div>
+
+</div>
+
+</section>
+
+<section id="case-study">
+
+<div class="section-bg">CASE STUDY</div>
+
+<div class="section-header">
+<h2 class="section-title">Project Case Study</h2>
+</div>
+
+<div class="process">
+
+<div class="step">
+<div class="step-number">01</div>
+<h4>Project</h4>
+<p>KompasTV Election Broadcast Graphics.</p>
+</div>
+
+<div class="step">
+<div class="step-number">02</div>
+<h4>Challenge</h4>
+<p>Create clear information graphics for national election coverage.</p>
+</div>
+
+<div class="step">
+<div class="step-number">03</div>
+<h4>Approach</h4>
+<p>Designed a motion system for titles, lower thirds and transitions.</p>
+</div>
+
+<div class="step">
+<div class="step-number">04</div>
+<h4>Execution</h4>
+<p>Built motion graphics and edited sequences for broadcast storytelling.</p>
+</div>
+
+<div class="step">
+<div class="step-number">05</div>
+<h4>Result</h4>
+<p>Graphics package used in national broadcast election coverage.</p>
+</div>
+
+</div>
+
+</section>
+
+<section id="clients">
+
+<div class="section-bg">CLIENTS</div>
+
+<div class="section-header">
+<h2 class="section-title">Trusted By</h2>
+</div>
+
+<div class="marquee">
+
+<div class="marquee-track">
+
+<img src="logo-kompas.png">
+<img src="logo-gtv.png">
+<img src="logo-iv.png">
+<img src="logo-upods.png">
+
+<img src="birudesa.png">
+<img src="brandecomers.png">
+<img src="imphighres.png">
+
+<img src="logo-kompas.png">
+<img src="logo-gtv.png">
+
+</div>
+
+</div>
+
+</section>
+
+<section id="contact">
+
+<div class="section-bg">CONTACT</div>
+
+<div class="section-header">
+<h2 class="section-title">Let's Work Together</h2>
+</div>
+
+<div class="contact-buttons">
+
+<a class="contact-btn email" href="mailto:jiro.primary@gmail.com">Email</a>
+<a class="contact-btn whatsapp" href="https://wa.me/6281510274343">WhatsApp</a>
+<a class="contact-btn linkedin" href="https://www.linkedin.com/in/jovi-andra-videoeditor">LinkedIn</a>
+
+</div>
+
+</section>
+
+<footer>
+Jovi Andra | Motion Designer | Video Editor
+</footer>
+
+<script>
+
+/* CURSOR */
+
+const cursor=document.querySelector(".cursor")
+
+document.addEventListener("mousemove",e=>{
+cursor.style.left=e.clientX+"px"
+cursor.style.top=e.clientY+"px"
+})
+```
